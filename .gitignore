@@ -1,0 +1,17 @@
+data
+.ipynb_checkpoints
+*.h5
+models
+*.swp
+*.p
+CODEOWNERS
+LICENSE
+set_git.sh
+Traffic_Sign_Classifier.ipynb
+writeup_template.md
+.idea/misc.xml
+.idea/encodings.xml
+.idea/modules.xml
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/Udactiy_CARND_Project_3_Traffic_Sign_Classifier.iml
