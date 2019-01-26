@@ -3,7 +3,6 @@ data
 *.h5
 models
 *.swp
-*.p
 CODEOWNERS
 LICENSE
 set_git.sh

@@ -1,0 +1,2 @@
+model_checkpoint_path: "C:\\Users\\DrRandom\\Documents\\GitHub\\Udactiy_CARND_Project_3_Traffic_Sign_Classifier\\model\\model.ckpt"
+all_model_checkpoint_paths: "C:\\Users\\DrRandom\\Documents\\GitHub\\Udactiy_CARND_Project_3_Traffic_Sign_Classifier\\model\\model.ckpt"
