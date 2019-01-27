@@ -6,11 +6,15 @@ import numpy as np
 from tensorflow.contrib.layers import flatten
 import tensorflow as tf
 from sklearn.utils import shuffle
+import glob
+import cv2
 
 
-# TODO: Fill this in based on where you saved the training and testing data
 def extract_data():
-
+    """
+    Extract pickled data from local folder
+    :return: extracted data in train, validate, test format
+    """
     training_file = 'data/train.p'
     validation_file = 'data/valid.p'
     testing_file = 'data/test.p'
@@ -26,19 +30,14 @@ def extract_data():
     X_valid, y_valid = valid['features'], valid['labels']
     X_test, y_test = test['features'], test['labels']
 
-    # TODO: Number of training examples
     n_train = len(X_train)
 
-    # TODO: Number of validation examples
     n_validation = len(X_valid)
 
-    # TODO: Number of testing examples.
     n_test = len(X_test)
 
-    # TODO: What's the shape of an traffic sign image?
     image_shape = np.shape(X_train[0])
 
-    # TODO: How many unique classes/labels there are in the dataset.
     n_classes = len(np.unique(y_train))
 
     print("Number of training examples =", n_train)
@@ -48,41 +47,41 @@ def extract_data():
 
     return X_train, y_train, X_valid, y_valid, X_test, y_test, n_classes
 
-# TODO: Data visualization
-# Data exploration visualization step
-# Data exploration visualization code goes here.
-# Feel free to use as many code cells as needed.
-
-
-def data_visualization(data):
-    pass
-# plt.imshow(X_train[0])
-# plt.show()
-
-# TODO: Preprocessing step (Normalization and grayscale conversion)
-# Preprocess the data here. It is required to normalize the data. Other preprocessing steps could include
-# converting to grayscale, etc.
-# Feel free to use as many code cells as needed.
-
 
 def pre_process_data(image_data):
+    """
+    Image pre-processing step
+    1) grayscale image from RGB
+    2) Normalize image
+    :param image_data: ndarray of image data in RGB colorspace
+    :return:
+    """
     # grayscale image
     image_data = np.sum(image_data / 3, axis=3, keepdims=True)
     # normalize image
     image_data = (image_data - 128) / 128
     return image_data
 
-# TODO: Definition of Architectural step
-# Define your architecture here.
 
-
-def model(X_train, y_train, X_valid, y_valid, X_test, y_test, n_classes, train, test):
-    # TODO: Train model step
-    # Train your model here.
-    # Calculate and report the accuracy on the training and validation set.
-    # Once a final model architecture is selected,
-    # the accuracy on the test set should be calculated and reported as well.
-    # Feel free to use as many code cells as needed.
+def model(X_train, y_train, X_valid, y_valid, X_test, y_test, x_german_test, y_german_test, n_classes,
+          train, test, german):
+    """
+    Model function for training and testing a LeNet Model
+    Dropout and L2 regularization is utilized
+    :param y_german_test:
+    :param x_german_test:
+    :param german:
+    :param X_train: Training samples (ndarray x 32 x 32 x 1)
+    :param y_train: Training classes (ndarray x 43)
+    :param X_valid: Validation samples (ndarray x 32 x 32 x 1)
+    :param y_valid: Validation classes (ndarray x 43)
+    :param X_test: Test samples
+    :param y_test: Test classes
+    :param n_classes: total # of classes in data
+    :param train: train model flag
+    :param test: test model flag
+    :return:
+    """
 
     EPOCHS = 100
     BATCH_SIZE = 128
@@ -203,19 +202,58 @@ def model(X_train, y_train, X_valid, y_valid, X_test, y_test, n_classes, train, 
         with tf.Session() as sess:
             model_dir = os.path.join(os.getcwd(), "model\\model.ckpt")
             saver.restore(sess, model_dir)
-            print('')
-
-            def evaluate(X_data, y_data):
-                num_examples = len(X_data)
-                total_accuracy = 0
-                sess = tf.get_default_session()
-                for offset in range(0, num_examples, BATCH_SIZE):
-                    batch_x, batch_y = X_data[offset:offset+BATCH_SIZE], y_data[offset:offset+BATCH_SIZE]
-                    accuracy = sess.run(accuracy_operation, feed_dict={x: batch_x, y: batch_y, keep_prob: 1.0})
-                    total_accuracy += (accuracy * len(batch_x))
-                return total_accuracy / num_examples
             test_accuracy = evaluate(X_test, y_test)
             print("Test Accuracy = {:.3f}".format(test_accuracy))
+
+    if german is True:
+        pred_operation = tf.argmax(logits, 1)
+        softmax_logits = tf.nn.softmax(logits)
+        top_k_prob = tf.nn.top_k(softmax_logits, 5)
+        with tf.Session() as sess:
+            model_dir = os.path.join(os.getcwd(), "model\\model.ckpt")
+            saver.restore(sess, model_dir)
+            german_predictions = sess.run(pred_operation, feed_dict={x: x_german_test, keep_prob: 1.0})
+            print(german_predictions)
+            german_accuracy = evaluate(x_german_test, y_german_test)
+            print("Test Accuracy German Signs = {:.3f}".format(german_accuracy))
+            top_k_prob = sess.run(top_k_prob, feed_dict={x: x_german_test, keep_prob: 1.0})
+            print(top_k_prob)
+
+
+def German_Signs():
+    """
+    Read in German signs found on Google maps in Berlin, Germany along Kronenstraße street
+    :return: image data for testing and respective labels
+    """
+    images = glob.glob(os.path.join(os.getcwd(), "German_Signs\\") + "*.jpg")
+    y_test = np.array([11, 15, 13, 26, 1])
+    img_list = []
+    for image in images:
+        img = cv2.imread(image)
+        img_list.append(img)
+
+    x_test = np.stack(img_list, axis=0)
+    x_test = pre_process_data(x_test)
+    return x_test, y_test
+
+
+def data_visualization(data):
+    """
+    Visualize data set
+    :param data:
+    :return:
+    """
+    pass
+# plt.imshow(X_train[0])
+# plt.show()
+
+
+def visualize_topk():
+    """
+    Visualize German signs with top 5 predicted probabilities for sign classification
+    :return:
+    """
+    pass
 
 
 def main():
@@ -224,7 +262,10 @@ def main():
     X_train = pre_process_data(X_train)
     X_valid = pre_process_data(X_valid)
     X_test = pre_process_data(X_test)
-    model(X_train, y_train, X_valid, y_valid, X_test, y_test, n_classes, train=False, test=True)
+    x_test_german, y_test_german = German_Signs()
+    model(X_train, y_train, X_valid, y_valid, X_test, y_test, x_test_german, y_test_german,
+          n_classes, train=False, test=True, german=True)
+
 
 if __name__ == "__main__":
     main()
