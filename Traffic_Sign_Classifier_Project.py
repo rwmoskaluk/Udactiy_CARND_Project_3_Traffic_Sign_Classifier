@@ -120,7 +120,7 @@ def model(X_train, y_train, X_valid, y_valid, X_test, y_test, x_german_test, y_g
         # Pooling. Input = 10x10x16. Output = 5x5x16.
         conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
 
-        # Flatten. Input = 5x5x16. Output = 400.
+        # Flatten. Input = 5x5x16. Output = 400. then dropout
         fc0 = flatten(conv2)
         fc0 = tf.nn.dropout(fc0, keep_prob=keep_prob)
 
@@ -130,7 +130,7 @@ def model(X_train, y_train, X_valid, y_valid, X_test, y_test, x_german_test, y_g
         fc1 = tf.matmul(fc0, fc1_w) + fc1_b
         L2_loss1 = 0.001 * tf.nn.l2_loss(fc1_w)
 
-        # Activation.
+        # Activation and then dropout
         fc1 = tf.nn.relu(fc1)
         fc1 = tf.nn.dropout(fc1, keep_prob=keep_prob)
 
@@ -140,7 +140,7 @@ def model(X_train, y_train, X_valid, y_valid, X_test, y_test, x_german_test, y_g
         fc2 = tf.matmul(fc1, fc2_w) + fc2_b
         L2_loss2 = 0.001 * tf.nn.l2_loss(fc2_w)
 
-        # Activation.
+        # Activation and then dropout
         fc2 = tf.nn.relu(fc2)
         fc2 = tf.nn.dropout(fc2, keep_prob=keep_prob)
 
@@ -218,6 +218,7 @@ def model(X_train, y_train, X_valid, y_valid, X_test, y_test, x_german_test, y_g
             print("Test Accuracy German Signs = {:.3f}".format(german_accuracy))
             top_k_prob = sess.run(top_k_prob, feed_dict={x: x_german_test, keep_prob: 1.0})
             print(top_k_prob)
+            # visualize_topk(top_k_prob, y_german_test)
 
 
 def German_Signs():
@@ -237,28 +238,88 @@ def German_Signs():
     return x_test, y_test
 
 
-def data_visualization(data):
+def data_visualization(X_train, y_train, n_classes):
     """
     Visualize data set
-    :param data:
+    :param n_classes:
+    :param y_train:
+    :param X_train:
     :return:
     """
-    pass
-# plt.imshow(X_train[0])
-# plt.show()
+    plt.title('Traffic Sign Frequency of Labels, Training Set')
+    plt.xlabel('Numeric Label')
+    plt.ylabel('Frequency')
+    plt.hist(y_train, bins=np.arange(y_train.min(), y_train.max()+1))
+    plt.savefig('visualizations/Label_Frequency.png', bbox_inches='tight')
+
+    filename = 'signnames.csv'
+    with open(filename, 'rb') as f:
+        label_list = f.readlines()[1:]
+
+    cols = 6
+    rows = 7
+
+    ax = []
+    fig = plt.figure(figsize=(32, 32))
+    # fig.tight_layout()
+
+    for loc in range(0, n_classes-1):
+        # array_indices = np.where(y_train == label)
+        array_indices = np.argwhere(y_train == loc)
+        ax.append(fig.add_subplot(rows, cols, loc+1))
+        ax[-1].set_title(label_list[loc].decode("utf-8"))
+        plt.imshow(X_train[array_indices[50][0]])
+
+    fig.subplots_adjust(hspace=0.5)
+    plt.savefig('visualizations/Training_Visualization_Images.png', bbox_inches='tight')
+
+    fig = plt.figure(figsize=(32, 32))
+    ax = []
+    rows = 1
+    cols = 2
+    ax.append(fig.add_subplot(rows, cols, 1))
+    ax[-1].set_title('Original Image')
+    plt.imshow(X_train[2050])
+    ax.append(fig.add_subplot(rows, cols, 2))
+    ax[-1].set_title('Normalized and Grayscale Image')
+    plt.imshow(X_train[2050], cmap='gray')
+
+    plt.savefig('visualizations/Traffic_Sign_Grayscale.png', bbox_inches='tight')
+    plt.show()
+    print('')
 
 
-def visualize_topk():
+def visualize_topk(top_k_prob, y_german_test):
     """
     Visualize German signs with top 5 predicted probabilities for sign classification
     :return:
     """
-    pass
+    filename = 'signnames.csv'
+    with open(filename, 'rb') as f:
+        label_list = f.readlines()[1:]
+    ax = []
+    rows = 5
+    cols = 1
+    fig = plt.figure(figsize=(30, 30))
+    fig.subplots_adjust(hspace=1.0)
+    fig.tight_layout()
+    for i in range(0, rows):
+        ax.append(fig.add_subplot(rows, cols, i+1))
+        ax[-1].set_title(label_list[y_german_test[i]].decode("utf-8"))
+        ax[-1].barh(top_k_prob[1][i], top_k_prob[0][i], align='center')
+        sub_label_list = [label_list[j].decode("utf-8") for j in top_k_prob[1][i]]
+        plt.yticks(top_k_prob[1][i], sub_label_list)
+        yminorlocator = plt.MaxNLocator(nbins=5)
+        ax[-1].yaxis.set_minor_locator(yminorlocator)
+
+    plt.savefig('visualizations/Top_5_K.png', bbox_inches='tight')
+    plt.show()
 
 
 def main():
 
     X_train, y_train, X_valid, y_valid, X_test, y_test, n_classes = extract_data()
+    # data_visualization(X_train, y_train, n_classes)
     X_train = pre_process_data(X_train)
     X_valid = pre_process_data(X_valid)
     X_test = pre_process_data(X_test)
