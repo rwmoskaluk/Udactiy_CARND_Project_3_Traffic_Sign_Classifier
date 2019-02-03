@@ -222,7 +222,7 @@ def model(X_train, y_train, X_valid, y_valid, X_test, y_test, x_german_test, y_g
             print("Test Accuracy German Signs = {:.3f}".format(german_accuracy))
             top_k_prob = sess.run(top_k_prob, feed_dict={x: x_german_test, keep_prob: 1.0})
             print(top_k_prob)
-            # visualize_topk(top_k_prob, y_german_test)
+            visualize_topk(top_k_prob, y_german_test)
 
 
 def German_Signs():
@@ -330,7 +330,6 @@ def main():
     x_test_german, y_test_german = German_Signs()
     model(X_train, y_train, X_valid, y_valid, X_test, y_test, x_test_german, y_test_german,
           n_classes, train=False, test=True, german=True)
-
 
 if __name__ == "__main__":
     main()

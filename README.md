@@ -21,6 +21,8 @@ The goals / steps of this project are the following:
 [image6]: ./German_Signs/German3.jpg "Traffic Sign 3"
 [image7]: ./German_Signs/German4.jpg "Traffic Sign 4"
 [image8]: ./German_Signs/German5.jpg "Traffic Sign 5"
+[image9]: ./visualizations/Top_5_K.png "Softmax Probabilities Top 5"
+
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
@@ -39,11 +41,15 @@ signs data set:
 * The shape of a traffic sign image is **(32px, 32px, 3 channels)**
 * The number of unique classes/labels in the data set is **43**
 
+
 #### 2. Visualization of Dataset
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the frequency of the labels for the training set of data.  In the training set we can see that there are varying frequencies from under 250 to well over 1750.  This can lead to a bias towards specific types of traffic signs (shape, color, or symbology)
+Here is an exploratory visualization of the data set. It is a bar chart showing how the frequency of the labels for the training set of data.  In the training set we can see that there are varying frequencies from under 250 to well over 1750.  This can lead to a bias towards specific types of traffic signs (shape, color, or symbology). The next picture shows example of what one of each labeled training data images looks like.
 
 ![alt text][image1]
+
+![alt text][image3]
+
 
 ### Design and Test a Model Architecture
 
@@ -103,18 +109,21 @@ My final model results were:
 * test set accuracy of **94%**
 
 If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
-
+1) The first step was running the LeNet model from the lab.  This utilized an RGB image (32x32x3) for the input.  The accuracy for this training was somewhere in the **80%** range.  
+2) The initial learning rate was dropped to a very low amount and then the epochs were increased.  To speed up training during this process the images were grayscaled and normalized.  This yield a high **80%** range for accuracy.
+3) Seeing that as learning rate and epochs were adjusted and the model was overfitting dropout was added after each fully connected layer.  A probability of **50%** was chosen for what to keep.  This yielded a low **90%** range
+4) Further reading suggested utilizing L2 regularization for reducing overfitting with the data set.  This was done after each fully connected layer for those layer weights.  The total sum of L2 loss was returned and then added to entropy score so that the optimizer could reduce the overall entropy and L2 loss when minimizing.
+5) After some trial and error here the model was eventually able to reach a very close **93%** mark.  Further tuning of the epochs and learning rate proved to be the key to getting over **93%**.
 
 ### Test a Model on New Images
 
 #### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web:
+Here are five German traffic signs that I found on the web via Google maps in Berlin, Germany on the street Mohrenstraße 20.  These images were screenshots and then resized to 32x32 from Google street view.
+
+<iframe src="https://www.google.com/maps/embed?pb=" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+
+https://www.google.com/maps/place/Mohrenstra%C3%9Fe+20,+10117+Berlin,+Germany/@52.5123685,13.388708,17z/data=!4m5!3m4!1s0x47a851d080705abb:0x860f462fe209dce5!8m2!3d52.51198!4d13.3908001
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6] 
 ![alt text][image7] ![alt text][image8]
@@ -127,30 +136,33 @@ Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
+| Right of way at next intersection | Right of way at next intersection  									| 
+| No Vehicles     			| No Vehicles 										|
 | Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| Traffic Signals	      		| Traffic Signals					 				|
+| Speed Limit 30km/h			| Speed Limit 120km/h     							|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of **80%**. This does not compare well with the accuracy of the network.  If the last image that has never been seen before were to be dropped then this would be in line with the **94%** accuracy that the network yielded.  With this challenging image it does closely guess that it could be a speed limit sign of 30km/h
 
 #### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
-
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+For the last image, the model is unsure as to what the sign is. The top five soft max probabilities were
 
 | Probability         	|     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+| 0.08         			| Speed Limit 30km/h   									| 
+| 0.05    				| Speed Limit 50km/h 										|
+| 0.10					| Speed Limit 80km/h											|
+| 0.13	      			| Speed Limit 120km/h					 				|
+| 0.08				    | Keep Right     							|
+
+Otherwise for the other 4 signs the softmax probabilities were very close to 1.  The image below shows how certain the model was with each new German sign from Google street view.
+
+![alt text][image9]
 
 
-For the second image ... 
+### Improvements/Problems
+Some improvements that could be done for this network are further adjusting the learning rate to increase performance along with extending the number of epochs.  Augmenting the dataset could also help improve the accuracy.
 
-
+Further implementing the visualization of internally what the network is doing should be done.
