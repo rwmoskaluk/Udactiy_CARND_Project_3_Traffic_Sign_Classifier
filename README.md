@@ -154,7 +154,7 @@ For the last image, the model is unsure as to what the sign is. The top five sof
 | 0.13	      			| Speed Limit 120km/h					 				|
 | 0.08				    | Keep Right     							|
 
-Otherwise for the other 4 signs the softmax probabilities were very close to 1.  The image below shows how certain the model was with each new German sign from Google street view.
+Otherwise for the other 3 signs the softmax probabilities were very close to 1, and the traffic signals sign was around **80%** with **20%** as General Caution.  The image below shows how certain the model was with each new German sign from Google street view.
 
 ![alt text][image9]
 

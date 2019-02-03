@@ -310,9 +310,11 @@ def visualize_topk(top_k_prob, y_german_test):
     for i in range(0, rows):
         ax.append(fig.add_subplot(rows, cols, i+1))
         ax[-1].set_title(label_list[y_german_test[i]].decode("utf-8"))
-        ax[-1].barh([10, 30, 50, 70, 90], top_k_prob[0][i], align='center')
+        ax[-1].barh([10, 30, 50, 70, 90], top_k_prob[0][i], align='center', height=7)
         sub_label_list = [label_list[j].decode("utf-8") for j in top_k_prob[1][i]]
         plt.yticks([10, 30, 50, 70, 90], sub_label_list)
+        ax[-1].tick_params(axis='both', which='major', labelsize=16)
+        ax[-1].tick_params(axis='both', which='minor', labelsize=16)
         # yminorlocator = plt.MaxNLocator(nbins=5)
         # ax[-1].yaxis.set_minor_locator(yminorlocator)
 
