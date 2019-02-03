@@ -42,6 +42,7 @@ def extract_data():
 
     print("Number of training examples =", n_train)
     print("Number of testing examples =", n_test)
+    print("Number of validation examples =", n_validation)
     print("Image data shape =", image_shape)
     print("Number of classes =", n_classes)
 
@@ -57,7 +58,10 @@ def pre_process_data(image_data):
     :return:
     """
     # grayscale image
-    image_data = np.sum(image_data / 3, axis=3, keepdims=True)
+    if image_data.ndim == 3:
+        image_data = np.sum(image_data / 3, axis=2, keepdims=True)
+    else:
+        image_data = np.sum(image_data / 3, axis=3, keepdims=True)
     # normalize image
     image_data = (image_data - 128) / 128
     return image_data
@@ -282,11 +286,11 @@ def data_visualization(X_train, y_train, n_classes):
     plt.imshow(X_train[2050])
     ax.append(fig.add_subplot(rows, cols, 2))
     ax[-1].set_title('Normalized and Grayscale Image')
-    plt.imshow(X_train[2050], cmap='gray')
+    gray_scale = pre_process_data(X_train[2050])
+    plt.imshow(gray_scale.reshape(32, 32), cmap='gray')
 
     plt.savefig('visualizations/Traffic_Sign_Grayscale.png', bbox_inches='tight')
     plt.show()
-    print('')
 
 
 def visualize_topk(top_k_prob, y_german_test):
