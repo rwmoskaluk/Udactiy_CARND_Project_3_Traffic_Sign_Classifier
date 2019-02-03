@@ -304,7 +304,7 @@ def visualize_topk(top_k_prob, y_german_test):
     ax = []
     rows = 5
     cols = 1
-    fig = plt.figure(figsize=(30, 30))
+    fig = plt.figure(figsize=(100, 100))
     fig.subplots_adjust(hspace=1.0)
     fig.tight_layout()
     for i in range(0, rows):
