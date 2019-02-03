@@ -121,12 +121,9 @@ If an iterative approach was chosen:
 
 Here are five German traffic signs that I found on the web via Google maps in Berlin, Germany on the street Mohrenstraße 20.  These images were screenshots and then resized to 32x32 from Google street view.
 
-<iframe src="https://www.google.com/maps/embed?pb=" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
-
 https://www.google.com/maps/place/Mohrenstra%C3%9Fe+20,+10117+Berlin,+Germany/@52.5123685,13.388708,17z/data=!4m5!3m4!1s0x47a851d080705abb:0x860f462fe209dce5!8m2!3d52.51198!4d13.3908001
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![alt text][image4] ![alt text][image5] ![alt text][image6] ![alt text][image7] ![alt text][image8]
 
 The last image might be difficult to classify because it is a combination of the training set images and not directly in the image set that was trained with.
 
