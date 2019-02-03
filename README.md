@@ -18,9 +18,9 @@ The goals / steps of this project are the following:
 [image3]: ./visualizations/Training_Visualization_Images.png "Training Images with Labels"
 [image4]: ./German_Signs/German1.jpg "Traffic Sign 1"
 [image5]: ./German_Signs/German2.jpg "Traffic Sign 2"
-[image6]: ./German_Signs/German3.jpg "Traffic Sign 3"
-[image7]: ./German_Signs/German4.jpg "Traffic Sign 4"
-[image8]: ./German_Signs/German5.jpg "Traffic Sign 5"
+[image6]: ./German_Signs/German3.JPG "Traffic Sign 3"
+[image7]: ./German_Signs/German4.JPG "Traffic Sign 4"
+[image8]: ./German_Signs/German5.JPG "Traffic Sign 5"
 [image9]: ./visualizations/Top_5_K.png "Softmax Probabilities Top 5"
 
 
