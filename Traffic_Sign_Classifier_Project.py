@@ -304,17 +304,17 @@ def visualize_topk(top_k_prob, y_german_test):
     ax = []
     rows = 5
     cols = 1
-    fig = plt.figure(figsize=(100, 100))
+    fig = plt.figure(figsize=(30, 30))
     fig.subplots_adjust(hspace=1.0)
     fig.tight_layout()
     for i in range(0, rows):
         ax.append(fig.add_subplot(rows, cols, i+1))
         ax[-1].set_title(label_list[y_german_test[i]].decode("utf-8"))
-        ax[-1].barh(top_k_prob[1][i], top_k_prob[0][i], align='center')
+        ax[-1].barh([10, 30, 50, 70, 90], top_k_prob[0][i], align='center')
         sub_label_list = [label_list[j].decode("utf-8") for j in top_k_prob[1][i]]
-        plt.yticks(top_k_prob[1][i], sub_label_list)
-        yminorlocator = plt.MaxNLocator(nbins=5)
-        ax[-1].yaxis.set_minor_locator(yminorlocator)
+        plt.yticks([10, 30, 50, 70, 90], sub_label_list)
+        # yminorlocator = plt.MaxNLocator(nbins=5)
+        # ax[-1].yaxis.set_minor_locator(yminorlocator)
 
     plt.savefig('visualizations/Top_5_K.png', bbox_inches='tight')
     plt.show()
