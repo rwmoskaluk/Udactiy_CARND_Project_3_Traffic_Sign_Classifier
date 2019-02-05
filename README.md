@@ -121,7 +121,7 @@ If an iterative approach was chosen:
 
 Here are five German traffic signs that I found on the web via Google maps in Berlin, Germany on the street Mohrenstraße 20.  These images were screenshots and then resized to 32x32 from Google street view.
 
-https://www.google.com/maps/place/Mohrenstra%C3%9Fe+20,+10117+Berlin,+Germany/@52.5123685,13.388708,17z/data=!4m5!3m4!1s0x47a851d080705abb:0x860f462fe209dce5!8m2!3d52.51198!4d13.3908001
+<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2428.164141255349!2d13.388708!3d52.5123685!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47a851d080705abb%3A0x860f462fe209dce5!2sMohrenstra%C3%9Fe+20%2C+10117+Berlin%2C+Germany!5e0!3m2!1sen!2sus!4v1549331881980" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6] ![alt text][image7] ![alt text][image8]
 
